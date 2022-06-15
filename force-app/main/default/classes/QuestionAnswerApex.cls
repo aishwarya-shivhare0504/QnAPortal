@@ -144,9 +144,9 @@ public without sharing class QuestionAnswerApex{
             
             if(Ans.id != a.id && a.Best_Answer__c == true){
                 a.Best_Answer__c = false;
-                ansList.add(a); 
+                ansList.add(b); 
             }
-            
+                     
         }
          
         questionList[0].Best_Answer_Selected__c =true;
