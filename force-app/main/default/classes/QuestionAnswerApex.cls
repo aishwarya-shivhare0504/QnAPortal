@@ -3,7 +3,7 @@ public without sharing class QuestionAnswerApex{
         
     @AuraEnabled
     public static String askQuestionPageSubmit(String question){
-         String baseUrl ='';
+         String baseUrl = '';
         try{
             if(question!=null || question.trim().remove(' ')!=''){
                 
