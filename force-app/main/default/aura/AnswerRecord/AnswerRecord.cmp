@@ -1,0 +1,111 @@
+<aura:component controller="QuestionAnswerApex" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <!--handlers-->
+    <aura:handler name='init' value='{!this}' action='{!c.doInit}'/>
+    
+    
+    <!--attributes--> 
+    <aura:attribute name="AnswerFromParent" type="Answer__c"/>
+    <aura:attribute name="UpVote" type="Boolean" default='false'/>
+    <aura:attribute name="DownVote" type="Boolean" default='false'/>
+    <aura:attribute name="showModal" type="Boolean" Default='false'/>
+    <aura:attribute name="Disab" type="Boolean" Default='true'/>
+    <aura:attribute name="Question" type="Question__c"/>
+    <aura:attribute name="showEditScreen" type="Boolean" Default='false'/>
+    
+    <!--register an Event-->
+    <aura:registerEvent name="SortingEvent" type="c:SortingEvent" />
+    
+    
+    <!--table-->
+    <tr class="slds-hint-parent">
+        
+        <td data-label="Best Answer" class="slds-form-element slds-size--1-of-13 td-fixed-width">
+            <aura:if isTrue="{!and(v.AnswerFromParent.Best_Answer__c==true,v.Disab==true)}">
+                <lightning:icon iconName='standard:answer_best' alternativeText='answer_best' size='large' title='answer_best'/>
+                <aura:set attribute="else">
+                    <div class="slds-truncate slds-cell-wrap" title=""><ui:inputRadio name="Ans" disabled='{!v.Disab}' value='{!v.AnswerFromParent.Best_Answer__c}' change="{!c.openModal}"/></div>
+                    
+                </aura:set>
+            </aura:if>
+            
+        </td>
+        <td data-label="Answer" class="slds-form-element slds-size--5-of-13 td-fixed-width">
+            <div class="slds-truncate slds-cell-wrap" title=""><lightning:recordViewForm aura:id="recordViewForm"
+                                                                                         recordId='{!v.AnswerFromParent.Id}'
+                                                                                         objectApiName="Answer__c"  
+                                                                                         
+                                                                                         > 
+                  
+                <lightning:outputField fieldName="Description__c" />  
+                <lightning:messages /> 
+                
+                </lightning:recordViewForm>
+            </div>
+        </td>
+        <td data-label="upVote" class="slds-form-element slds-size--1-of-13 td-fixed-width">
+            
+            <aura:if isTrue="{!v.AnswerFromParent.UserAnsQuesLikeDislikes__r[0].LikeOrDislike__c=='like'}">
+                <div class="slds-truncate" title=""> <lightning:button variant="" label="upvote" title="Brand action" onclick="{! c.voteMethod }"> <lightning:icon iconName='utility:like' variant ='success' alternativeText='like' size='medium' title='like'/></lightning:button>{!v.AnswerFromParent.UpVote__c}</div>
+                
+                <aura:set attribute="else">
+                    <div class="slds-truncate" title=""> <lightning:button variant="" label="upvote" title="Brand action" onclick="{! c.voteMethod }"> <lightning:icon iconName='utility:like' alternativeText='like' size='medium' title='like'/></lightning:button>{!v.AnswerFromParent.UpVote__c}</div>
+                    
+                </aura:set>
+            </aura:if> 
+            
+            
+            
+        </td>
+        <td data-label="downvote" class="slds-form-element slds-size--1-of-13 td-fixed-width">
+            
+            <aura:if isTrue="{!v.AnswerFromParent.UserAnsQuesLikeDislikes__r[0].LikeOrDislike__c=='dislike'}">
+                <div class="slds-truncate" title=""><lightning:button  variant="" label="downvote" title="Brand action" onclick="{! c.voteMethod }"><lightning:icon  iconName='utility:dislike' alternativeText='dislike' variant='error' size='medium' title='dislike'/></lightning:button>{!v.AnswerFromParent.DownVote__c}</div>
+                
+                <aura:set attribute="else">
+                    <div class="slds-truncate" title=""><lightning:button variant="" label="downvote" title="Brand action" onclick="{! c.voteMethod }"><lightning:icon iconName='utility:dislike' alternativeText='dislike' size='medium' title='dislike'/></lightning:button>{!v.AnswerFromParent.DownVote__c}</div>
+                    
+                    
+                </aura:set>
+            </aura:if>
+        </td>
+        <td data-label="downvote" class="slds-form-element slds-size--1-of-13 td-fixed-width">
+            <aura:if isTrue="{!v.Question.Best_Answer_Selected__c!=true}">
+                <div class="slds-truncate" title=""><lightning:button variant="" label="Edit" title="Brand action" onclick="{! c.editAnswer }"><lightning:icon iconName='utility:edit' alternativeText='edit' size='small' title='edit'/></lightning:button></div>
+                
+            </aura:if>
+            
+        </td>
+        <td data-label="downvote" class="slds-form-element slds-size--5-of-13 td-fixed-width">
+            <div class="slds-truncate slds-cell-wrap">
+                <aura:if isTrue="{!v.showEditScreen}">
+                    <!--<c:EditAnswer showEditScreen="{!v.showEditScreen}" Answer='{!v.AnswerFromParent}'/>-->
+                    
+                    
+                    <lightning:recordEditForm aura:id="recordEditForm"
+                                              recordId='{!v.AnswerFromParent.Id}'
+                                              objectApiName="Answer__c"  
+                                              onsubmit="{!c.handleSubmit}"
+                                              >    
+                        <lightning:messages /> 
+                        
+                        
+                        <lightning:inputField fieldName="Description__c" />  
+                        <lightning:button class="slds-m-top_small" variant="" type="submit" name="update" label="Update" />
+                        <lightning:button class="slds-m-top_small" variant="" label='Cancel' name="cancel" onclick="{! c.editAnswer }"/>
+                        
+                        
+                    </lightning:recordEditForm>
+                </aura:if>
+            </div>
+        </td>
+        
+    </tr>
+    
+    <!--table-->
+    
+    
+    <aura:if isTrue="{!v.showModal}">
+        <c:SelectBestAnswer showModal="{!v.showModal}" Answer='{!v.AnswerFromParent}' Question='{!v.Question}'/>
+    </aura:if>
+    
+</aura:component>

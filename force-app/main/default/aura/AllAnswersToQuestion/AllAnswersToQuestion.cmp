@@ -1,0 +1,58 @@
+<aura:component controller="QuestionAnswerApex" implements="force:hasRecordId,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <!--handlers-->
+    <aura:handler name='init' value='{!this}' action='{!c.doInit}'/>
+    <aura:handler name="SortingEvent" event="c:SortingEvent" action="{!c.doInit}"/>
+    
+    <!--attributes--> 
+    <aura:attribute name="AllAnswers" type="Answer__c[]"/>
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="Question" type="Question__c"/>
+    <aura:attribute name="UserID" type="String"/>
+    <aura:attribute name="Disable" type="boolean"/>
+    <aura:attribute name="TableFlag" type="boolean" default='false'/>
+        
+    <!--Aura Method-->
+    <aura:method name="AuraMethod" action="{!c.doInit}" />
+    
+    <!--table-->
+    <aura:if isTrue="{!v.TableFlag}">
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+        <thead>
+            <tr class="slds-line-height_reset">
+                
+                <th scope="col">
+                    <div class="slds-truncate" title="Best Answer">Best Answer</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Asnwer">Asnwer</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="upvote">Like</div>
+                </th>
+                <th  scope="col">
+                    <div class="slds-truncate" title="downvote">Dislike</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Edit"></div>
+                </th>
+                 <th scope="col">
+                    <div class="slds-truncate" title="update"></div>
+                </th>
+            </tr>
+        </thead>
+        
+       
+       <aura:iteration items="{!v.AllAnswers}" var="item">
+         <tbody>
+        <!-- sub component -->
+        <c:AnswerRecord AnswerFromParent='{!item}' Disab='{!(v.UserID == v.Question.CreatedById) ? false : true}' Question='{!v.Question}'/>  
+        </tbody>
+    </aura:iteration>
+            
+    </table>
+    </aura:if>
+    
+    
+    <!--table-->
+ 
+</aura:component>

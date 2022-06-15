@@ -1,0 +1,17 @@
+<aura:component controller="QuestionAnswerApex" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+	
+    <!--handlers-->
+    <aura:handler name='init' value='{!this}' action='{!c.doInit}'/>
+    
+    <!--attributes-->
+    <aura:attribute name="QuestionDescription" type="String"/>
+    
+   	<lightning:inputRichText value="{!v.QuestionDescription}" placeholder="Type something interesting">
+        <lightning:insertImageButton/>
+    </lightning:inputRichText>
+  	
+    <br/>
+    
+    <lightning:button variant="brand" label="Submit Question" title="Brand action" onclick="{! c.submitQuestion }" />
+   
+</aura:component>

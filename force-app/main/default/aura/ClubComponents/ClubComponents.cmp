@@ -1,0 +1,23 @@
+<aura:component controller='QuestionAnswerApex' implements="force:hasRecordId,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    
+    <!--handlers-->
+    <aura:handler name='init' value='{!this}' action='{!c.doInit}'/>
+    <aura:handler name="EventForReload" event="c:EventForReload" action="{!c.callingChildMethod}"/>
+    <aura:handler name="HideAnswerInputFieldEvent" event="c:HideAnswerInputFieldEvent" action="{!c.parentComponentEvent}"/>
+ 
+    
+    <!--attribute-->
+    <aura:attribute name="Question" type="Question__c"/>
+    <aura:attribute name="UserID" type="String"/>
+    
+    <aura:if isTrue="{!v.Question.Best_Answer_Selected__c==false}">
+        <div class="slds-p-bottom_xx-large">
+             <!--sub Component 1-->
+            <c:AnswerQuestion recordId='{!v.recordId}'/>
+        </div>
+    </aura:if>    
+    
+    <!--sub Component 2-->
+    <c:AllAnswersToQuestion aura:id="childCmp" recordId='{!v.recordId}' UserID='{!v.UserID}' Question='{!v.Question}'/>
+    
+</aura:component>
